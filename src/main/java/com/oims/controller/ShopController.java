@@ -104,12 +104,17 @@ public class ShopController {
     }
 
     @PostMapping("/checkout")
-    public String placeOrder(@RequestParam PaymentMode paymentMode,
-                             @RequestParam String shippingAddress,
+    public String placeOrder(@RequestParam(required = false) PaymentMode paymentMode,
+                             @RequestParam(defaultValue = "") String shippingAddress,
                              HttpSession session, RedirectAttributes ra) {
         Integer cid = SessionCustomer.get(session);
         if (cid == null) {
             return "redirect:/shop";
+        }
+        // server side checks (same rules as the JS on the page)
+        if (paymentMode == null) {
+            ra.addFlashAttribute("error", "Please choose a payment mode");
+            return "redirect:/checkout";
         }
         if (shippingAddress.trim().length() < 10) {
             ra.addFlashAttribute("error", "Shipping address looks too short");
