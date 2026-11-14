@@ -1,5 +1,4 @@
 <%@ include file="common/taglibs.jspf" %>
-<%@ page isErrorPage="true" %>
 <c:set var="pageTitle" value="Error"/>
 <%@ include file="common/header.jspf" %>
 <%-- used by GlobalExceptionHandler (code/title/message) and by Spring Boot's default /error (status/error) --%>

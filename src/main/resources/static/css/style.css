@@ -90,6 +90,7 @@ table.data td.num, table.data th.num { text-align: right; }
 .form-row label { display: block; font-weight: 600; margin-bottom: 4px; }
 .form-row input, .form-row select, .form-row textarea {
     width: 100%; padding: 8px 10px; border: 1px solid #cfd8dc; border-radius: 4px; font: inherit; }
+.form-row input[type=checkbox] { width: auto; margin-right: 4px; }
 .form-row input:focus, .form-row select:focus, .form-row textarea:focus { outline: none; border-color: #1e88e5; }
 .form-row .hint { font-size: 12px; color: #78909c; }
 .form-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
