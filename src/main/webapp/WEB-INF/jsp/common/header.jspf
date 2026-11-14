@@ -1,0 +1,54 @@
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
+<c:set var="uri" value="${requestScope['jakarta.servlet.forward.request_uri']}"/>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${pageTitle} | ShopKart OIMS</title>
+    <link rel="stylesheet" href="${ctx}/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body data-ctx="${ctx}">
+<header class="topbar">
+    <div class="wrap topbar-inner">
+        <a class="brand" href="${ctx}/">ShopKart <span>OIMS</span></a>
+
+        <form class="shopping-as" method="post" action="${ctx}/switch-customer">
+            <label for="customerSwitch">Shopping as</label>
+            <select id="customerSwitch" name="customerId" onchange="this.form.submit()">
+                <option value="">-- none --</option>
+                <c:forEach items="${allCustomers}" var="cu">
+                    <option value="${cu.id}" ${cu.id == currentCustomerId ? 'selected' : ''}>${cu.fullName}</option>
+                </c:forEach>
+            </select>
+        </form>
+
+        <a class="cart-link" href="${ctx}/cart">Cart <span id="cartCount" class="badge">${empty cartCount ? 0 : cartCount}</span></a>
+    </div>
+    <nav class="mainnav">
+        <div class="wrap">
+            <a href="${ctx}/" class="${uri == ctx.concat('/') ? 'active' : ''}">Dashboard</a>
+            <a href="${ctx}/shop" class="${fn:startsWith(uri, ctx.concat('/shop')) || fn:startsWith(uri, ctx.concat('/cart')) || fn:startsWith(uri, ctx.concat('/checkout')) ? 'active' : ''}">Shop</a>
+            <a href="${ctx}/products" class="${fn:startsWith(uri, ctx.concat('/products')) ? 'active' : ''}">Products</a>
+            <a href="${ctx}/categories" class="${fn:startsWith(uri, ctx.concat('/categories')) ? 'active' : ''}">Categories</a>
+            <a href="${ctx}/sellers" class="${fn:startsWith(uri, ctx.concat('/sellers')) ? 'active' : ''}">Sellers</a>
+            <a href="${ctx}/customers" class="${fn:startsWith(uri, ctx.concat('/customers')) ? 'active' : ''}">Customers</a>
+            <a href="${ctx}/orders" class="${fn:startsWith(uri, ctx.concat('/orders')) ? 'active' : ''}">Orders</a>
+            <a href="${ctx}/returns" class="${fn:startsWith(uri, ctx.concat('/returns')) ? 'active' : ''}">Returns</a>
+            <span class="dropdown ${fn:startsWith(uri, ctx.concat('/reports')) ? 'active' : ''}">
+                <a href="#" class="dropdown-toggle">Reports &#9662;</a>
+                <span class="dropdown-menu">
+                    <a href="${ctx}/reports/sales">Monthly sales</a>
+                    <a href="${ctx}/reports/top-products">Top selling products</a>
+                    <a href="${ctx}/reports/low-stock">Low stock / reorder</a>
+                </span>
+            </span>
+        </div>
+    </nav>
+</header>
+
+<main class="wrap content">
+    <c:if test="${not empty success}"><div class="flash flash-success"><c:out value="${success}"/></div></c:if>
+    <c:if test="${not empty error}"><div class="flash flash-error"><c:out value="${error}"/></div></c:if>
+    <c:if test="${not empty info}"><div class="flash flash-info"><c:out value="${info}"/></div></c:if>

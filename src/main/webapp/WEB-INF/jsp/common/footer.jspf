@@ -1,0 +1,12 @@
+</main>
+
+<footer class="footer">
+    <div class="wrap">
+        ShopKart Order &amp; Inventory Management System &middot; Building Database Applications - Assignment 2
+    </div>
+</footer>
+
+<div id="toast"></div>
+<script src="${ctx}/js/app.js"></script>
+</body>
+</html>
