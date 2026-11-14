@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>E-Commerce Order and Inventory Management System - Assignment 2 Report</title>
+<style>
+@page { size: A4; margin: 20mm 18mm 20mm 18mm;
+  @bottom-center { content: "Page " counter(page); font-family: "Times New Roman", serif; font-size: 9pt; color: #555; } }
+@page :first { @bottom-center { content: none; } }
+body { font-family: "Times New Roman", Times, serif; font-size: 11.5pt; line-height: 1.45; color: #111; }
+h1 { font-size: 17pt; margin: 0 0 8px; border-bottom: 1.5px solid #333; padding-bottom: 4px; break-after: avoid; }
+h2 { font-size: 13pt; margin: 16px 0 6px; break-after: avoid; }
+h3 { font-size: 11.5pt; margin: 12px 0 4px; break-after: avoid; }
+section { margin-bottom: 18px; }
+.newpage { break-before: page; }
+p { margin: 5px 0 7px; text-align: justify; }
+table { border-collapse: collapse; width: 100%; margin: 6px 0 10px; font-size: 10pt; break-inside: auto; }
+tr { break-inside: avoid; }
+th, td { border: 1px solid #777; padding: 3px 6px; vertical-align: top; text-align: left; }
+th { background: #e6e6e6; }
+td.c, th.c { text-align: center; }
+code, pre { font-family: Consolas, "Courier New", monospace; font-size: 9pt; }
+pre { background: #f4f4f4; border: 1px solid #ccc; padding: 6px 8px; white-space: pre-wrap; break-inside: avoid; margin: 6px 0 10px; }
+.fill { background: #fff3a0; padding: 0 3px; }
+.caption { text-align: center; font-size: 9.5pt; font-style: italic; margin: 2px 0 12px; }
+figure { margin: 8px 0; break-inside: avoid; text-align: center; }
+figure img { max-width: 100%; border: 1px solid #999; }
+figure img.half { max-width: 78%; }
+ul, ol { margin: 4px 0 8px; padding-left: 22px; }
+li { margin: 2px 0; }
+.title-page { height: 245mm; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+.title-page .course { font-size: 13pt; letter-spacing: .5px; }
+.title-page .main { font-size: 24pt; font-weight: bold; margin: 18px 0 6px; }
+.title-page .sub { font-size: 14pt; margin-bottom: 40px; }
+.title-page table { width: 70%; margin: 0 auto; font-size: 12pt; }
+.toc { columns: 2; font-size: 10.5pt; }
+.toc li { break-inside: avoid; }
+.pass { color: #1b5e20; font-weight: bold; }
+svg text { font-family: Arial, Helvetica, sans-serif; }
+a { color: #0b4f9c; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- 1. Title page -->
+<div class="title-page">
+  <div class="course">BUILDING DATABASE APPLICATIONS</div>
+  <div class="course">Staff Graded Assignment 2 &ndash; Full-Stack Database Application Development</div>
+  <div class="main">E-Commerce Order &amp; Inventory<br>Management System</div>
+  <div class="sub">(ShopKart OIMS) &ndash; Final Project Report</div>
+  <table>
+    <tr><th style="width:40%">Student name</th><td>Dharmik Trivedi</td></tr>
+    <tr><th>Roll number</th><td>2024EB03047</td></tr>
+    <tr><th>Project number</th><td>4 (Part A list)</td></tr>
+    <tr><th>GitHub repository</th><td style="font-size:10.5pt">https://github.com/DharmikTrivedi/ecommerce-order-inventory</td></tr>
+    <tr><th>Submission date</th><td>15/11/2026</td></tr>
+  </table>
+</div>
+
+<section class="newpage">
+<h1>Contents</h1>
+<ol class="toc">
+<li>Title Page</li><li>Student Details</li><li>Selected Project Details</li><li>Abstract</li>
+<li>Summary of the Database Design and Changes Made</li><li>System Architecture (MVC)</li>
+<li>Technology Stack</li><li>Project Structure</li><li>Database Configuration</li>
+<li>Entity Classes and Relationships</li><li>Data Access and Custom Queries</li><li>Business Rules and Transactions</li>
+<li>URL Mapping Table</li><li>User Interface Pages and Page Flow</li><li>Client-Side Validation and Interactive Features</li>
+<li>AJAX Features</li><li>Server-Side Validation and Error Handling</li><li>End-to-End Workflows</li>
+<li>Search, Navigation and Pagination</li><li>Reports and Dashboard</li><li>Testing Summary and Test Cases</li>
+<li>Version Control History</li><li>Application Screenshots</li><li>User Guide</li><li>Conclusion</li>
+<li>Future Enhancements</li><li>References</li>
+</ol>
+
+<h1 style="margin-top:22px">2. Student Details</h1>
+<table>
+<tr><th style="width:35%">Name</th><td>Dharmik Trivedi</td></tr>
+<tr><th>Roll number</th><td>2024EB03047</td></tr>
+<tr><th>Programme / Batch</th><td>B.Sc. Computer Science (BCSZC214)</td></tr>
+<tr><th>Course</th><td>Building Database Applications</td></tr>
+<tr><th>Project type</th><td>Individual</td></tr>
+<tr><th>GitHub repository</th><td><a href="https://github.com/DharmikTrivedi/ecommerce-order-inventory">https://github.com/DharmikTrivedi/ecommerce-order-inventory</a></td></tr>
+</table>
+
+<h1 style="margin-top:22px">3. Selected Project Details</h1>
+<table>
+<tr><th style="width:35%">Project no. and title</th><td>4 &ndash; E-Commerce Order &amp; Inventory Management System</td></tr>
+<tr><th>Application name</th><td>ShopKart OIMS</td></tr>
+<tr><th>Required features (Part A)</th><td>CRUD screens for products, categories, customers and sellers; cart and order placement with stock update as a transaction; AJAX add-to-cart and stock check; return/refund request form; customer order history page.</td></tr>
+<tr><th>Database</th><td>MySQL 8.0, schema <code>ecom_oims</code> (10 tables)</td></tr>
+<tr><th>Source code (GitHub)</th><td><a href="https://github.com/DharmikTrivedi/ecommerce-order-inventory">https://github.com/DharmikTrivedi/ecommerce-order-inventory</a></td></tr>
+</table>
+<p>The application is used by a small online store. Store staff maintain the catalogue (categories, sellers, products and stock), register customers and move orders through shipping and delivery. A customer browses the shop, fills a cart, places an order and can later raise a return/refund request. There is no login module in the scope of this assignment, so a <b>&ldquo;Shopping as&rdquo;</b> drop-down in the header selects which customer is shopping; it is stored in the HTTP session.</p>
+</section>
+
+<section>
+<h1>4. Abstract</h1>
+<p>This report describes the development of ShopKart OIMS, a web application that manages the product catalogue, stock, shopping carts, orders and returns of an online store. It is built with Spring Boot 3.3, Spring Data JPA (Hibernate 6) on a MySQL 8 database, JSP pages with JSTL for the views, and CSS with jQuery for the client side. The code follows the MVC pattern with separate controller, service, repository and entity layers.</p>
+<p>Ten tables are mapped to nine entity classes (the wishlist join table belongs to the many-to-many) with ten relationships, including a many-to-many wishlist between customers and products. The repositories contain about twenty custom queries (search with paging, monthly sales, best sellers, low stock, row locking). Seven business rules are enforced in the service layer, and order placement, order cancellation and return approval run as transactions, so stock is never left half-updated. The interface has 21 pages sharing one header, footer and menu, six forms with client-side validation, and six AJAX features such as add-to-cart and live stock check. Three report pages and a dashboard summarise sales and stock. The work is covered by 30 automated tests (unit, query and endpoint tests) and a table of 14 manual test cases, all of which pass.</p>
+</section>
+
+<section class="newpage">
+<h1>5. Summary of the Database Design and Changes Made</h1>
+<p>The Assignment 1 design was not submitted, so the database for this project was designed at the start of Assignment 2, following the scope given for project 4 in Part A. The database models the store around four master tables (category, seller, customer, product) and the transaction tables that are created as customers shop (cart_item, orders, order_item, return_request). A wishlist table links customers and products many-to-many, and a stock_movement table keeps a history of every stock change.</p>
+<table>
+<tr><th style="width:18%">Table</th><th>Purpose</th><th style="width:34%">Key columns / constraints</th></tr>
+<tr><td>category</td><td>Product categories (Electronics, Books ...)</td><td>PK category_id, name UNIQUE</td></tr>
+<tr><td>seller</td><td>Vendors who supply products</td><td>PK seller_id, email UNIQUE, gstin UNIQUE</td></tr>
+<tr><td>customer</td><td>Registered customers</td><td>PK customer_id, email UNIQUE, pincode 6 chars</td></tr>
+<tr><td>product</td><td>Catalogue item with price and stock</td><td>sku UNIQUE, CHECK price &gt; 0, CHECK stock_qty &ge; 0, FK category, FK seller</td></tr>
+<tr><td>wishlist</td><td>Customer &harr; product (M:N)</td><td>Composite PK (customer_id, product_id)</td></tr>
+<tr><td>cart_item</td><td>Lines in a customer's cart</td><td>UNIQUE (customer_id, product_id), CHECK quantity 1&ndash;10</td></tr>
+<tr><td>orders</td><td>Order header</td><td>order_number UNIQUE, status, payment_mode, total_amount, delivered_on</td></tr>
+<tr><td>order_item</td><td>Order lines with price snapshot</td><td>FK order, FK product, unit_price, line_total</td></tr>
+<tr><td>return_request</td><td>Return / refund request for an order line</td><td>FK order_item, status, refund_amount</td></tr>
+<tr><td>stock_movement</td><td>Audit trail of stock changes</td><td>FK product, change_qty, movement_type, reference</td></tr>
+</table>
+<h3>Key design decisions</h3>
+<table>
+<tr><th style="width:4%">#</th><th style="width:40%">Decision</th><th>Reason</th></tr>
+<tr><td>1</td><td>Separate table <code>stock_movement</code></td><td>Every SALE, CANCEL and RETURN writes a row, so the dashboard can show recent stock activity and every stock change can be traced back to an order or return.</td></tr>
+<tr><td>2</td><td><code>cart_item</code> stored in the database with UNIQUE (customer_id, product_id) and CHECK quantity BETWEEN 1 AND 10</td><td>The cart survives restarts, and the constraints back up the &ldquo;max 10 per product&rdquo; rule at database level.</td></tr>
+<tr><td>3</td><td><code>unit_price</code> and <code>line_total</code> on order_item</td><td>The price at the time of the order is stored, so later price changes do not alter old orders or refunds.</td></tr>
+<tr><td>4</td><td><code>active</code> flag and <code>reorder_level</code> on product</td><td>Products that were sold cannot be deleted (order history), so they are deactivated instead; reorder_level drives the low-stock report.</td></tr>
+<tr><td>5</td><td><code>delivered_on</code> on orders</td><td>Needed for the 7-day return window rule.</td></tr>
+<tr><td>6</td><td>Status / payment columns stored as VARCHAR instead of MySQL ENUM</td><td>Matches Java enums mapped with <code>@Enumerated(STRING)</code> and is easier to extend.</td></tr>
+<tr><td>7</td><td>Indexes on orders(customer_id, order_date), orders(status), product(name)</td><td>Speed up order history, the status filter and product search.</td></tr>
+</table>
+<h3>Changes made during development</h3>
+<p>No changes were made to the table structure after <code>schema.sql</code> was first committed. Hibernate runs with <code>ddl-auto=validate</code>, so the application checks at every start-up that the entity classes still match these tables.</p>
+</section>
+
+<section class="newpage">
+<h1>6. System Architecture (MVC)</h1>
+<p>The application is a layered Spring Boot application. Each layer only talks to the layer below it. Controllers never use repositories directly for writes; all rules and transactions are in the service layer.</p>
+<figure>
+<svg width="640" height="420" viewBox="0 0 640 420" xmlns="http://www.w3.org/2000/svg">
+ <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#333"/></marker></defs>
+ <rect x="10" y="10" width="620" height="54" rx="6" fill="#e3f2fd" stroke="#1565c0"/>
+ <text x="320" y="32" text-anchor="middle" font-size="14" font-weight="bold">Browser (View)</text>
+ <text x="320" y="51" text-anchor="middle" font-size="11">JSP + JSTL pages, style.css, app.js (jQuery: validation, AJAX calls)</text>
+ <rect x="10" y="94" width="300" height="70" rx="6" fill="#fff8e1" stroke="#ef6c00"/>
+ <text x="160" y="116" text-anchor="middle" font-size="13" font-weight="bold">Page Controllers</text>
+ <text x="160" y="134" text-anchor="middle" font-size="10.5">Product, Category, Seller, Customer, Shop,</text>
+ <text x="160" y="149" text-anchor="middle" font-size="10.5">Order, Return, Report, Home  &#8594; return view name</text>
+ <rect x="330" y="94" width="300" height="70" rx="6" fill="#fff8e1" stroke="#ef6c00"/>
+ <text x="480" y="116" text-anchor="middle" font-size="13" font-weight="bold">ApiController (/api/**)</text>
+ <text x="480" y="134" text-anchor="middle" font-size="10.5">@RestController for AJAX</text>
+ <text x="480" y="149" text-anchor="middle" font-size="10.5">returns JSON</text>
+ <rect x="10" y="190" width="620" height="54" rx="6" fill="#e8f5e9" stroke="#2e7d32"/>
+ <text x="320" y="212" text-anchor="middle" font-size="13" font-weight="bold">Service layer (@Service, @Transactional)</text>
+ <text x="320" y="230" text-anchor="middle" font-size="10.5">CartService, OrderService, ReturnService, ProductService, CustomerService, ReportService ... business rules</text>
+ <rect x="10" y="270" width="620" height="54" rx="6" fill="#f3e5f5" stroke="#6a1b9a"/>
+ <text x="320" y="292" text-anchor="middle" font-size="13" font-weight="bold">Repository layer (Spring Data JPA interfaces)</text>
+ <text x="320" y="310" text-anchor="middle" font-size="10.5">derived queries + @Query JPQL; entities in com.oims.model (Hibernate ORM)</text>
+ <rect x="200" y="352" width="240" height="56" rx="6" fill="#eceff1" stroke="#37474f"/>
+ <text x="320" y="375" text-anchor="middle" font-size="13" font-weight="bold">MySQL 8 &ndash; ecom_oims</text>
+ <text x="320" y="393" text-anchor="middle" font-size="10.5">10 tables, FK + CHECK constraints</text>
+ <line x1="120" y1="64" x2="120" y2="92" stroke="#333" marker-end="url(#ar)"/>
+ <text x="126" y="83" font-size="9.5">HTTP GET/POST</text>
+ <line x1="520" y1="64" x2="520" y2="92" stroke="#333" marker-end="url(#ar)"/>
+ <text x="526" y="83" font-size="9.5">$.ajax / $.post</text>
+ <line x1="200" y1="92" x2="200" y2="66" stroke="#333" marker-end="url(#ar)"/>
+ <text x="206" y="83" font-size="9.5">rendered JSP</text>
+ <line x1="440" y1="92" x2="440" y2="66" stroke="#333" marker-end="url(#ar)"/>
+ <text x="380" y="83" font-size="9.5">JSON</text>
+ <line x1="160" y1="164" x2="160" y2="188" stroke="#333" marker-end="url(#ar)"/>
+ <line x1="480" y1="164" x2="480" y2="188" stroke="#333" marker-end="url(#ar)"/>
+ <line x1="320" y1="244" x2="320" y2="268" stroke="#333" marker-end="url(#ar)"/>
+ <line x1="320" y1="324" x2="320" y2="350" stroke="#333" marker-end="url(#ar)"/>
+ <text x="326" y="341" font-size="9.5">JDBC (mysql-connector-j)</text>
+</svg>
+<div class="caption">Figure 1 &ndash; Layers of ShopKart OIMS and the path of a request</div>
+</figure>
+<h3>Flow of one request: placing an order</h3>
+<ol>
+<li>The browser posts the checkout form to <code>POST /checkout</code> (client-side validation has already checked the payment mode).</li>
+<li><code>ShopController.placeOrder()</code> reads the customer id from the session and calls <code>OrderService.placeOrder()</code>.</li>
+<li>The service method runs inside one <code>@Transactional</code> transaction: it loads the cart, locks each product row (<code>findByIdForUpdate</code>), checks stock, reduces it, writes stock_movement rows, saves the order with its items and empties the cart.</li>
+<li>The repositories turn these calls into SQL through Hibernate; MySQL commits everything at the end, or rolls everything back if a <code>BusinessException</code> was thrown.</li>
+<li>The controller adds a flash message and redirects to <code>/orders/{id}</code> (Post/Redirect/Get); the JSP <code>orders/view.jsp</code> renders the result.</li>
+</ol>
+</section>
+
+<section>
+<h1>7. Technology Stack</h1>
+<table>
+<tr><th style="width:30%">Technology / dependency</th><th style="width:14%">Version</th><th>Purpose</th></tr>
+<tr><td>Java (Temurin JDK)</td><td>17</td><td>Language and runtime</td></tr>
+<tr><td>Spring Boot (starter parent)</td><td>3.3.5</td><td>Auto-configuration, embedded Tomcat, dependency versions</td></tr>
+<tr><td>spring-boot-starter-web</td><td>3.3.5</td><td>Spring MVC controllers, REST endpoints for AJAX, Jackson JSON</td></tr>
+<tr><td>spring-boot-starter-data-jpa</td><td>3.3.5</td><td>Spring Data repositories, Hibernate 6 ORM, transactions</td></tr>
+<tr><td>spring-boot-starter-validation</td><td>3.3.5</td><td>Bean Validation (<code>@NotBlank</code>, <code>@Pattern</code>, <code>@Email</code> ...) for server-side checks</td></tr>
+<tr><td>tomcat-embed-jasper</td><td>10.1</td><td>Compiles and runs JSP pages</td></tr>
+<tr><td>jakarta.servlet.jsp.jstl (API + GlassFish impl.)</td><td>3.0</td><td>JSTL core, fmt and fn tags in the JSPs</td></tr>
+<tr><td>mysql-connector-j</td><td>8.x</td><td>JDBC driver for MySQL</td></tr>
+<tr><td>MySQL Community Server</td><td>8.0.36</td><td>Relational database</td></tr>
+<tr><td>jQuery (CDN)</td><td>3.7.1</td><td>DOM handling, AJAX calls, form validation script</td></tr>
+<tr><td>HTML5 / CSS3</td><td>&ndash;</td><td>Page layout and common stylesheet <code>style.css</code></td></tr>
+<tr><td>spring-boot-devtools</td><td>3.3.5</td><td>Automatic restart during development</td></tr>
+<tr><td>spring-boot-starter-test (JUnit 5, Mockito, AssertJ, MockMvc)</td><td>3.3.5</td><td>Unit, query and endpoint tests</td></tr>
+<tr><td>H2 database</td><td>2.x</td><td>In-memory database (MySQL mode) used only by the tests</td></tr>
+<tr><td>Apache Maven</td><td>3.9.9</td><td>Build and dependency management</td></tr>
+<tr><td>Git</td><td>&ndash;</td><td>Version control</td></tr>
+</table>
+</section>
+
+<section class="newpage">
+<h1>8. Project Structure</h1>
+<pre>ecommerce-order-inventory/
+├── pom.xml                         Maven build file (war packaging)
+├── run.ps1                         starts the app with the local JDK + Maven
+├── database/
+│   ├── create_user.sql             creates database ecom_oims and user oims_app (run as root)
+│   ├── schema.sql                  CREATE TABLE statements, constraints, indexes
+│   └── sample_data.sql             6 categories, 5 sellers, 12 customers, 25 products, 18 orders
+└── src/
+    ├── main/java/com/oims/
+    │   ├── OimsApplication.java    main class (Spring Boot)
+    │   ├── config/WebConfig.java   interceptor + date formatters for JSPs
+    │   ├── model/                  10 entity classes (incl. Order, OrderItem ...) + 4 enums
+    │   ├── dto/                    MonthlySales, TopProduct (report rows)
+    │   ├── repository/             10 Spring Data JPA repositories with custom queries
+    │   ├── service/                business logic and transactions (9 services)
+    │   ├── controller/             10 controllers (9 page controllers + ApiController)
+    │   ├── exception/              NotFoundException, BusinessException, GlobalExceptionHandler
+    │   └── web/                    SessionCustomer, PageUtil, HeaderInterceptor
+    ├── main/resources/
+    │   ├── application.properties  datasource, JPA and view settings
+    │   └── static/css/style.css, static/js/app.js
+    ├── main/webapp/WEB-INF/
+    │   ├── jsp/common/             taglibs.jspf, header.jspf, footer.jspf  (shared layout)
+    │   ├── jsp/{categories,sellers,customers,products,shop,orders,returns,reports}/*.jsp
+    │   ├── jsp/dashboard.jsp, error.jsp
+    │   └── tags/pager.tag, sortlink.tag   reusable paging and sorting tags
+    └── test/java/com/oims/         service, repository and controller tests</pre>
+<table>
+<tr><th style="width:32%">Key file</th><th>Role</th></tr>
+<tr><td>OrderService.java</td><td>Order placement, cancellation and status changes (two transactions)</td></tr>
+<tr><td>ReturnService.java</td><td>Return eligibility rules and the approve (refund + restock) transaction</td></tr>
+<tr><td>CartService.java</td><td>Add to cart / change quantity with the 1&ndash;10 and stock rules</td></tr>
+<tr><td>ApiController.java</td><td>JSON endpoints used by the AJAX features</td></tr>
+<tr><td>GlobalExceptionHandler.java</td><td>Maps exceptions to the friendly error page with the right HTTP status</td></tr>
+<tr><td>header.jspf / footer.jspf</td><td>Common header, navigation menu, flash messages and footer for every page</td></tr>
+<tr><td>app.js</td><td>Client-side validation, AJAX calls and interactive behaviour</td></tr>
+</table>
+</section>
+
+<section>
+<h1>9. Database Configuration</h1>
+<p>The database and a dedicated application user are created once by running <code>database/create_user.sql</code> as root. The tables are then created with <code>schema.sql</code> and filled with <code>sample_data.sql</code>. The application connects with the limited user <code>oims_app</code>, which only has rights on <code>ecom_oims</code>.</p>
+<pre># src/main/resources/application.properties
+spring.datasource.url=jdbc:mysql://localhost:3306/ecom_oims?useSSL=false&amp;serverTimezone=Asia/Kolkata&amp;allowPublicKeyRetrieval=true
+spring.datasource.username=oims_app
+spring.datasource.password=********
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# tables come from database/schema.sql, Hibernate only checks that the entities match them
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.open-in-view=true
+
+spring.mvc.view.prefix=/WEB-INF/jsp/
+spring.mvc.view.suffix=.jsp
+app.page-size=8</pre>
+<ul>
+<li><b>ddl-auto=validate</b>: Hibernate does not create or change tables. On start-up it checks every entity against the MySQL tables and refuses to start if a column or type does not match, which keeps the code and the schema from drifting apart.</li>
+<li><b>serverTimezone=Asia/Kolkata</b>: the JVM default time zone is set to the same zone in <code>OimsApplication</code>, so times saved by Java and by MySQL defaults agree.</li>
+<li><b>Connection pool</b>: HikariCP (Spring Boot default) with its default settings.</li>
+<li>The tests use a separate <code>src/test/resources/application.properties</code> pointing to an H2 in-memory database in MySQL mode, so running the tests never touches the real data.</li>
+</ul>
+</section>
+
+<section class="newpage">
+<h1>10. Entity Classes and Relationships</h1>
+<table>
+<tr><th style="width:18%">Entity</th><th style="width:16%">Table</th><th>Main fields</th><th style="width:33%">Relationships</th></tr>
+<tr><td>Category</td><td>category</td><td>id, name, description</td><td>@OneToMany products</td></tr>
+<tr><td>Seller</td><td>seller</td><td>id, name, email, phone, city, gstin, joinedOn</td><td>@OneToMany products</td></tr>
+<tr><td>Customer</td><td>customer</td><td>id, firstName, lastName, email, phone, address, city, pincode</td><td>@OneToMany orders; <b>@ManyToMany wishlist</b></td></tr>
+<tr><td>Product</td><td>product</td><td>id, sku, name, price, stockQty, reorderLevel, active</td><td>@ManyToOne category, @ManyToOne seller</td></tr>
+<tr><td>CartItem</td><td>cart_item</td><td>id, quantity, addedAt</td><td>@ManyToOne customer, @ManyToOne product</td></tr>
+<tr><td>Order</td><td>orders</td><td>id, orderNumber, orderDate, status, paymentMode, shippingAddress, totalAmount, deliveredOn</td><td>@ManyToOne customer, @OneToMany(cascade=ALL) items</td></tr>
+<tr><td>OrderItem</td><td>order_item</td><td>id, quantity, unitPrice, lineTotal</td><td>@ManyToOne order, @ManyToOne product</td></tr>
+<tr><td>ReturnRequest</td><td>return_request</td><td>id, quantity, reason, status, refundAmount, requestedOn, processedOn</td><td>@ManyToOne orderItem</td></tr>
+<tr><td>StockMovement</td><td>stock_movement</td><td>id, changeQty, movementType, reference, createdAt</td><td>@ManyToOne product</td></tr>
+<tr><td>(wishlist)</td><td>wishlist</td><td>customer_id, product_id</td><td>join table of the many-to-many</td></tr>
+</table>
+<p>Enums <code>OrderStatus</code> (PLACED, SHIPPED, DELIVERED, CANCELLED), <code>PaymentMode</code> (COD, UPI, CARD), <code>ReturnStatus</code> and <code>MovementType</code> are stored as strings with <code>@Enumerated(EnumType.STRING)</code>. In total there are 9 entity classes plus the wishlist join table (10 tables) and 10 relationships.</p>
+<figure>
+<svg width="660" height="330" viewBox="0 0 660 330" xmlns="http://www.w3.org/2000/svg" font-size="11">
+ <g fill="#fff" stroke="#333">
+  <rect x="10" y="20" width="110" height="34"/><rect x="10" y="120" width="110" height="34"/>
+  <rect x="200" y="70" width="110" height="34"/><rect x="420" y="70" width="110" height="34"/>
+  <rect x="300" y="190" width="110" height="34"/><rect x="200" y="280" width="110" height="34"/>
+  <rect x="540" y="190" width="110" height="34"/><rect x="420" y="280" width="110" height="34"/>
+  <rect x="10" y="230" width="120" height="34"/>
+ </g>
+ <rect x="310" y="10" width="100" height="30" fill="#fff8e1" stroke="#ef6c00" stroke-dasharray="4 2"/>
+ <line x1="360" y1="40" x2="365" y2="80" stroke="#ef6c00" stroke-dasharray="4 2"/>
+ <g text-anchor="middle" font-weight="bold">
+  <text x="65" y="42">Category</text><text x="65" y="142">Seller</text><text x="255" y="92">Product</text>
+  <text x="475" y="92">Customer</text><text x="355" y="212">OrderItem</text><text x="255" y="302">ReturnRequest</text>
+  <text x="595" y="212">CartItem</text><text x="475" y="302">Order</text><text x="70" y="252">StockMovement</text>
+  <text x="360" y="30" font-weight="normal">wishlist (M:N)</text>
+ </g>
+ <g stroke="#333" fill="none">
+  <line x1="120" y1="37" x2="200" y2="80"/><line x1="120" y1="137" x2="200" y2="95"/>
+  <line x1="310" y1="80" x2="420" y2="80"/><line x1="290" y1="104" x2="340" y2="190"/>
+  <line x1="410" y1="210" x2="475" y2="280"/><line x1="340" y1="224" x2="280" y2="280"/>
+  <line x1="530" y1="95" x2="590" y2="190"/><line x1="475" y1="104" x2="475" y2="280"/>
+  <line x1="200" y1="100" x2="100" y2="230"/><line x1="310" y1="98" x2="545" y2="200"/>
+ </g>
+ <g font-size="10" fill="#b71c1c">
+  <text x="126" y="50">1</text><text x="185" y="76">N</text><text x="126" y="132">1</text><text x="185" y="104">N</text>
+  <text x="316" y="76">M</text><text x="404" y="76">N</text><text x="298" y="122">1</text><text x="332" y="186">N</text>
+  <text x="415" y="226">N</text><text x="462" y="276">1</text><text x="330" y="238">1</text><text x="286" y="276">N</text>
+  <text x="538" y="110">1</text><text x="586" y="186">N</text><text x="480" y="120">1</text><text x="480" y="274">N</text>
+  <text x="186" y="118">1</text><text x="104" y="226">N</text><text x="320" y="110">1</text><text x="530" y="194">N</text>
+ </g>
+</svg>
+<div class="caption">Figure 2 &ndash; Entity relationship overview (1 = one side, N/M = many side)</div>
+</figure>
+<pre>// Customer.java - the many-to-many relationship
+@ManyToMany
+@JoinTable(name = "wishlist",
+           joinColumns = @JoinColumn(name = "customer_id"),
+           inverseJoinColumns = @JoinColumn(name = "product_id"))
+private Set&lt;Product&gt; wishlist = new HashSet&lt;&gt;();
+
+// Order.java - order lines are saved together with the order
+@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+private List&lt;OrderItem&gt; items = new ArrayList&lt;&gt;();</pre>
+</section>
+
+<section class="newpage">
+<h1>11. Data Access and Custom Queries</h1>
+<p>Each entity has a repository interface that extends <code>JpaRepository</code>, which gives the standard save, findById, findAll and delete operations. The custom queries below are added on top of these (JPQL with <code>@Query</code> or Spring Data derived query methods).</p>
+<table>
+<tr><th style="width:4%">#</th><th style="width:30%">Repository method</th><th style="width:12%">Type</th><th>What it does / where it is used</th></tr>
+<tr><td>1</td><td>ProductRepository.search(kw, catId, activeOnly, Pageable)</td><td>JPQL + paging</td><td>Product list and shop: name/SKU search, category filter, sorting and pagination with a separate count query.</td></tr>
+<tr><td>2</td><td>ProductRepository.findLowStock()</td><td>JPQL</td><td>Active products with stock_qty &le; reorder_level, lowest first (low-stock report).</td></tr>
+<tr><td>3</td><td>ProductRepository.countLowStock()</td><td>JPQL aggregate</td><td>Low-stock counter on the dashboard.</td></tr>
+<tr><td>4</td><td>ProductRepository.findByIdForUpdate(id)</td><td>JPQL + PESSIMISTIC_WRITE lock</td><td>Locks the product row (SELECT ... FOR UPDATE) during order placement so two orders cannot oversell.</td></tr>
+<tr><td>5</td><td>ProductRepository.findTop10ByActiveTrueAndNameContainingIgnoreCaseOrderByName</td><td>Derived</td><td>Live search suggestions (AJAX).</td></tr>
+<tr><td>6</td><td>OrderRepository.search(status, kw, Pageable)</td><td>JPQL + join fetch + paging</td><td>Order list: filter by status, search by order number or customer name.</td></tr>
+<tr><td>7</td><td>OrderRepository.monthlySales()</td><td>JPQL constructor expression, GROUP BY</td><td>Orders and revenue per month, cancelled orders excluded (monthly sales report).</td></tr>
+<tr><td>8</td><td>OrderRepository.totalRevenue()</td><td>JPQL aggregate</td><td>Revenue tile on the dashboard.</td></tr>
+<tr><td>9</td><td>OrderRepository.findByCustomerIdOrderByOrderDateDesc</td><td>Derived</td><td>Customer order history page.</td></tr>
+<tr><td>10</td><td>OrderItemRepository.findTopSelling(Pageable)</td><td>JPQL, GROUP BY, ORDER BY SUM</td><td>Top-N best-selling products by quantity (report).</td></tr>
+<tr><td>11</td><td>ReturnRequestRepository.sumActiveReturnQty(itemId)</td><td>JPQL aggregate</td><td>Quantity already returned for an order line (rejected ones ignored) &ndash; used by the return rule.</td></tr>
+<tr><td>12</td><td>CustomerRepository.search(kw, city, Pageable)</td><td>JPQL + paging</td><td>Customer list: name/email search and city filter.</td></tr>
+<tr><td>13</td><td>CustomerRepository.findDistinctCities()</td><td>JPQL DISTINCT</td><td>Values for the city filter drop-down.</td></tr>
+<tr><td>14</td><td>CategoryRepository.findAllWithProductCount()</td><td>JPQL LEFT JOIN + COUNT</td><td>Category list with number of products in each.</td></tr>
+<tr><td>15</td><td>CartItemRepository.countItemsInCart(cid)</td><td>JPQL SUM</td><td>Cart badge in the header.</td></tr>
+<tr><td>16</td><td>CartItemRepository.clearCart(cid)</td><td>JPQL bulk DELETE (@Modifying)</td><td>Empties the cart inside the order transaction.</td></tr>
+<tr><td>17</td><td>SellerRepository.findByNameContainingIgnoreCaseOrCityContainingIgnoreCaseOrderByName</td><td>Derived</td><td>Seller search.</td></tr>
+<tr><td>18</td><td>StockMovementRepository.findTop8ByOrderByCreatedAtDesc</td><td>Derived</td><td>Recent stock activity on the dashboard.</td></tr>
+</table>
+<pre>@Query("select new com.oims.dto.MonthlySales(year(o.orderDate), month(o.orderDate), count(o), sum(o.totalAmount)) " +
+       "from Order o where o.status &lt;&gt; com.oims.model.OrderStatus.CANCELLED " +
+       "group by year(o.orderDate), month(o.orderDate) " +
+       "order by year(o.orderDate) desc, month(o.orderDate) desc")
+List&lt;MonthlySales&gt; monthlySales();
+
+@Lock(LockModeType.PESSIMISTIC_WRITE)
+@Query("select p from Product p where p.id = :id")
+Optional&lt;Product&gt; findByIdForUpdate(@Param("id") Integer id);</pre>
+</section>
+
+<section class="newpage">
+<h1>12. Business Rules and Transactions</h1>
+<h3>Business rules (enforced in the service layer)</h3>
+<table>
+<tr><th style="width:5%">ID</th><th style="width:38%">Rule</th><th style="width:22%">Where</th><th>Message shown to the user</th></tr>
+<tr><td>BR1</td><td>Quantity per product in the cart is 1 to 10 and never more than the stock.</td><td>CartService.validateQuantity</td><td>&ldquo;Only 3 unit(s) of Laptop Stand in stock&rdquo;</td></tr>
+<tr><td>BR2</td><td>Inactive products cannot be added to a cart or ordered.</td><td>ProductService.checkSellable, OrderService</td><td>&ldquo;... is no longer available&rdquo;</td></tr>
+<tr><td>BR3</td><td>An order can be cancelled only while it is PLACED; cancelling restores the stock.</td><td>OrderService.cancelOrder</td><td>&ldquo;Order ... is SHIPPED and can no longer be cancelled&rdquo;</td></tr>
+<tr><td>BR4</td><td>Order status can only move PLACED &rarr; SHIPPED &rarr; DELIVERED.</td><td>OrderService.advanceStatus</td><td>&ldquo;Order ... is already DELIVERED&rdquo;</td></tr>
+<tr><td>BR5</td><td>A return can be requested only for a DELIVERED order, within 7 days of delivery, and only up to the quantity bought minus earlier active returns.</td><td>ReturnService.checkEligible / returnableQty</td><td>&ldquo;Return window of 7 days has passed&rdquo;</td></tr>
+<tr><td>BR6</td><td>A product that has been sold is deactivated instead of deleted; categories and sellers that still have products, and customers who have orders, cannot be deleted.</td><td>Product/Category/Seller/CustomerService</td><td>&ldquo;Wireless Mouse has order history, so it was marked inactive instead of deleted&rdquo;</td></tr>
+<tr><td>BR7</td><td>Customer and seller emails, product SKUs and category names must be unique.</td><td>services + UNIQUE constraints</td><td>&ldquo;This email is already registered&rdquo;</td></tr>
+</table>
+<h3>Transactional operations</h3>
+<table>
+<tr><th style="width:22%">Operation</th><th>Steps inside one @Transactional method</th></tr>
+<tr><td><b>T1</b> Place order<br><code>OrderService.placeOrder</code></td><td>Load cart &rarr; for each line lock the product row and check stock &rarr; reduce stock &rarr; add OrderItem with price snapshot &rarr; write SALE stock_movement &rarr; save order with total &rarr; clear the cart. If any line is short a BusinessException is thrown and <b>everything</b> is rolled back (proved by the endpoint test <code>checkout_rollsBackWholeOrderWhenOneItemIsShort</code>).</td></tr>
+<tr><td><b>T2</b> Cancel order<br><code>OrderService.cancelOrder</code></td><td>Check status is PLACED &rarr; add each line's quantity back to stock &rarr; write CANCEL movements &rarr; set status CANCELLED.</td></tr>
+<tr><td><b>T3</b> Approve return<br><code>ReturnService.approve</code></td><td>Check the request is still REQUESTED &rarr; calculate refund = quantity &times; unit price &rarr; add stock back &rarr; write RETURN movement &rarr; set status APPROVED and processed date.</td></tr>
+</table>
+<pre>@Transactional
+public Order placeOrder(Integer customerId, PaymentMode paymentMode, String shippingAddress) {
+    ...
+    for (CartItem line : cart) {
+        Product p = productRepo.findByIdForUpdate(line.getProduct().getId()) ... ;
+        if (line.getQuantity() &gt; p.getStockQty()) {
+            throw new BusinessException("Not enough stock for " + p.getName() + ": requested "
+                    + line.getQuantity() + ", available " + p.getStockQty());
+        }
+        p.setStockQty(p.getStockQty() - line.getQuantity());
+        OrderItem item = new OrderItem(p, line.getQuantity());
+        order.addItem(item);
+        total = total.add(item.getLineTotal());
+        movementRepo.save(new StockMovement(p, -line.getQuantity(), MovementType.SALE, order.getOrderNumber()));
+    }
+    order.setTotalAmount(total);
+    orderRepo.save(order);
+    cartRepo.clearCart(customerId);
+    return order;
+}</pre>
+</section>
+
+<section class="newpage">
+<h1>13. URL Mapping Table</h1>
+<table>
+<tr><th style="width:5%">#</th><th style="width:9%">Method</th><th style="width:30%">URL</th><th>Purpose</th></tr>
+<tr><td>1</td><td>GET</td><td>/</td><td>Dashboard (counts, recent orders, recent stock activity)</td></tr>
+<tr><td>2</td><td>POST</td><td>/switch-customer</td><td>Select the customer who is shopping (stored in session)</td></tr>
+<tr><td>3</td><td>GET</td><td>/categories</td><td>List categories with product count</td></tr>
+<tr><td>4</td><td>GET</td><td>/categories/new, /categories/{id}/edit</td><td>Add / edit category form</td></tr>
+<tr><td>5</td><td>POST</td><td>/categories/save</td><td>Create or update a category</td></tr>
+<tr><td>6</td><td>POST</td><td>/categories/{id}/delete</td><td>Delete a category (only if it has no products)</td></tr>
+<tr><td>7</td><td>GET</td><td>/sellers, /sellers/new, /sellers/{id}/edit</td><td>List (with search) / add / edit sellers</td></tr>
+<tr><td>8</td><td>POST</td><td>/sellers/save, /sellers/{id}/delete</td><td>Save / delete a seller</td></tr>
+<tr><td>9</td><td>GET</td><td>/customers</td><td>Customer list: search, city filter, sorting, pagination</td></tr>
+<tr><td>10</td><td>GET</td><td>/customers/{id}</td><td>Customer details, order history and wishlist</td></tr>
+<tr><td>11</td><td>GET</td><td>/customers/new, /customers/{id}/edit</td><td>Register / edit customer form</td></tr>
+<tr><td>12</td><td>POST</td><td>/customers/save, /customers/{id}/delete</td><td>Save / delete a customer</td></tr>
+<tr><td>13</td><td>GET</td><td>/products</td><td>Product list: search, category filter, sorting, pagination</td></tr>
+<tr><td>14</td><td>GET</td><td>/products/new, /products/{id}/edit</td><td>Add / edit product form</td></tr>
+<tr><td>15</td><td>POST</td><td>/products/save, /products/{id}/delete</td><td>Save product / delete (or deactivate if sold)</td></tr>
+<tr><td>16</td><td>GET</td><td>/shop</td><td>Product catalogue for customers (cards, search, sort, paging)</td></tr>
+<tr><td>17</td><td>GET</td><td>/cart</td><td>Shopping cart of the selected customer</td></tr>
+<tr><td>18</td><td>POST</td><td>/cart/{itemId}/remove</td><td>Remove a cart line</td></tr>
+<tr><td>19</td><td>GET</td><td>/checkout</td><td>Checkout form (address, payment mode, order summary)</td></tr>
+<tr><td>20</td><td>POST</td><td>/checkout</td><td>Place the order (transaction T1)</td></tr>
+<tr><td>21</td><td>GET</td><td>/my-orders</td><td>Order history of the selected customer (redirects to /customers/{id})</td></tr>
+<tr><td>22</td><td>GET</td><td>/orders</td><td>All orders: status filter, search, sorting, pagination</td></tr>
+<tr><td>23</td><td>GET</td><td>/orders/{id}</td><td>Order details with lines and actions</td></tr>
+<tr><td>24</td><td>POST</td><td>/orders/{id}/advance</td><td>Move status PLACED&rarr;SHIPPED&rarr;DELIVERED</td></tr>
+<tr><td>25</td><td>POST</td><td>/orders/{id}/cancel</td><td>Cancel order and restore stock (transaction T2)</td></tr>
+<tr><td>26</td><td>GET</td><td>/returns</td><td>Return requests (filter by status)</td></tr>
+<tr><td>27</td><td>GET</td><td>/returns/new?itemId=</td><td>Return / refund request form for one order line</td></tr>
+<tr><td>28</td><td>POST</td><td>/returns</td><td>Submit a return request</td></tr>
+<tr><td>29</td><td>POST</td><td>/returns/{id}/approve, /returns/{id}/reject</td><td>Approve (refund + restock, T3) or reject a request</td></tr>
+<tr><td>30</td><td>GET</td><td>/reports/sales</td><td>Monthly sales report</td></tr>
+<tr><td>31</td><td>GET</td><td>/reports/top-products</td><td>Top selling products report</td></tr>
+<tr><td>32</td><td>GET</td><td>/reports/low-stock</td><td>Low stock / reorder report</td></tr>
+<tr><td>33</td><td>POST</td><td>/api/cart/add</td><td>AJAX: add to cart, returns JSON with new cart count</td></tr>
+<tr><td>34</td><td>POST</td><td>/api/cart/{itemId}/qty</td><td>AJAX: change cart quantity, returns new line and cart totals</td></tr>
+<tr><td>35</td><td>GET</td><td>/api/products/{id}/stock</td><td>AJAX: current stock of a product</td></tr>
+<tr><td>36</td><td>GET</td><td>/api/products/search?q=</td><td>AJAX: live search suggestions</td></tr>
+<tr><td>37</td><td>POST</td><td>/api/wishlist/{productId}</td><td>AJAX: add/remove product from wishlist</td></tr>
+<tr><td>38</td><td>GET</td><td>/api/customers/email-available?email=</td><td>AJAX: check whether an email is already registered</td></tr>
+</table>
+</section>
+
+<section class="newpage">
+<h1>14. User Interface Pages and Page Flow</h1>
+<p>All pages include the same <code>header.jspf</code> (logo, &ldquo;Shopping as&rdquo; selector, cart badge, navigation menu and flash messages) and <code>footer.jspf</code>, and use one stylesheet, so the look is consistent. The application has 21 JSP pages:</p>
+<table>
+<tr><th style="width:5%">#</th><th style="width:30%">Page (JSP)</th><th>Content</th></tr>
+<tr><td>1</td><td>dashboard.jsp</td><td>Key counts, recent orders, recent stock activity</td></tr>
+<tr><td>2&ndash;3</td><td>categories/list, form</td><td>Category CRUD</td></tr>
+<tr><td>4&ndash;5</td><td>sellers/list, form</td><td>Seller CRUD</td></tr>
+<tr><td>6&ndash;8</td><td>customers/list, form, view</td><td>Customer CRUD, details with order history and wishlist</td></tr>
+<tr><td>9&ndash;10</td><td>products/list, form</td><td>Product CRUD</td></tr>
+<tr><td>11&ndash;13</td><td>shop/catalog, cart, checkout</td><td>Customer shopping pages</td></tr>
+<tr><td>14&ndash;15</td><td>orders/list, view</td><td>Order management (customer order history is on customers/view, also opened by /my-orders)</td></tr>
+<tr><td>16&ndash;17</td><td>returns/list, form</td><td>Return requests and return/refund form</td></tr>
+<tr><td>18&ndash;20</td><td>reports/sales, top-products, low-stock</td><td>Report pages</td></tr>
+<tr><td>21</td><td>error.jsp</td><td>Friendly error page (404 / 400 / 422 / 500)</td></tr>
+</table>
+<figure>
+<svg width="660" height="250" viewBox="0 0 660 250" xmlns="http://www.w3.org/2000/svg" font-size="11">
+ <defs><marker id="ar2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#333"/></marker></defs>
+ <g fill="#e3f2fd" stroke="#1565c0">
+  <rect x="10" y="20" width="100" height="30" rx="4"/><rect x="150" y="20" width="90" height="30" rx="4"/>
+  <rect x="280" y="20" width="90" height="30" rx="4"/><rect x="410" y="20" width="100" height="30" rx="4"/>
+  <rect x="550" y="20" width="100" height="30" rx="4"/><rect x="550" y="110" width="100" height="30" rx="4"/>
+  <rect x="410" y="110" width="100" height="30" rx="4"/><rect x="410" y="200" width="100" height="30" rx="4"/>
+  <rect x="150" y="110" width="110" height="30" rx="4"/><rect x="150" y="200" width="110" height="30" rx="4"/>
+  <rect x="10" y="200" width="100" height="30" rx="4"/>
+ </g>
+ <g text-anchor="middle">
+  <text x="60" y="39">Dashboard</text><text x="195" y="39">Shop</text><text x="325" y="39">Cart</text>
+  <text x="460" y="39">Checkout</text><text x="600" y="39">Order details</text><text x="600" y="129">Ship / Deliver</text>
+  <text x="460" y="129">Return form</text><text x="460" y="219">Returns list</text>
+  <text x="205" y="129">Products / CRUD</text><text x="205" y="219">Reports (3)</text><text x="60" y="219">Customer view</text>
+ </g>
+ <g stroke="#333" marker-end="url(#ar2)">
+  <line x1="110" y1="35" x2="148" y2="35"/><line x1="240" y1="35" x2="278" y2="35"/><line x1="370" y1="35" x2="408" y2="35"/>
+  <line x1="510" y1="35" x2="548" y2="35"/><line x1="600" y1="50" x2="600" y2="108"/><line x1="550" y1="125" x2="512" y2="125"/>
+  <line x1="460" y1="140" x2="460" y2="198"/><line x1="60" y1="50" x2="150" y2="110"/><line x1="60" y1="50" x2="150" y2="205"/>
+  <line x1="60" y1="50" x2="60" y2="198"/><line x1="110" y1="215" x2="548" y2="45"/>
+ </g>
+ <text x="190" y="68" font-size="9.5" fill="#555">AJAX: add to cart, qty, stock check</text>
+ <text x="272" y="172" font-size="9.5" fill="#555">customer order history &#8594; order details</text>
+</svg>
+<div class="caption">Figure 3 &ndash; Main page flow (every page can also be reached from the navigation menu)</div>
+</figure>
+</section>
+
+<section>
+<h1>15. Client-Side Validation and Interactive Features</h1>
+<p>A small validation script in <code>app.js</code> runs on every form with the class <code>js-validate</code>. The rules are written as HTML attributes, so the same script is reused by all forms: <code>required</code>, <code>type="email"</code>, <code>data-pattern</code> (regular expression), <code>min</code>/<code>max</code> and <code>data-minlen</code>. On submit (and when a field loses focus) invalid fields get a red border and a message under them, and the form is not sent.</p>
+<table>
+<tr><th style="width:24%">Form</th><th>Client-side checks</th></tr>
+<tr><td>Customer form</td><td>Names required; valid email; mobile = 10 digits starting 6&ndash;9; pincode = 6 digits; address required. Email also checked with the server (AJAX).</td></tr>
+<tr><td>Product form</td><td>SKU pattern (e.g. EL-1001), name required, price at least 1, stock &ge; 0, reorder level &ge; 0, category and seller selected.</td></tr>
+<tr><td>Seller form</td><td>Name, valid email, 10-digit phone, GSTIN pattern (15 characters) if given.</td></tr>
+<tr><td>Category form</td><td>Name required, at most 60 characters.</td></tr>
+<tr><td>Checkout form</td><td>Shipping address at least 10 characters, payment mode must be chosen.</td></tr>
+<tr><td>Return form</td><td>Quantity between 1 and the returnable quantity, reason minimum 10 characters.</td></tr>
+</table>
+<h3>Interactive features</h3>
+<ol>
+<li><b>Confirmation dialogs</b> &ndash; delete, cancel order, approve/reject return ask &ldquo;Are you sure?&rdquo; first (<code>data-confirm</code>).</li>
+<li><b>Ship to a different address</b> &ndash; checkbox on checkout clears the address box for typing a new one and restores the default when unticked.</li>
+<li><b>Refund preview</b> &ndash; on the return form the estimated refund updates as the quantity changes.</li>
+<li><b>Character counter</b> &ndash; textareas show &ldquo;n / 255 characters&rdquo; as you type.</li>
+<li><b>Reports drop-down menu</b> and <b>auto-hiding flash messages</b>; <b>toast</b> pop-ups after AJAX actions.</li>
+<li><b>Print button</b> on report pages.</li>
+</ol>
+</section>
+
+<section class="newpage">
+<h1>16. AJAX Features</h1>
+<table>
+<tr><th style="width:4%">#</th><th style="width:22%">Feature</th><th style="width:28%">Request</th><th>What changes on the page</th></tr>
+<tr><td>1</td><td>Add to cart</td><td>POST /api/cart/add</td><td>Cart badge in the header updates and a toast shows the result; on error (e.g. more than stock) the message from the server is shown. No page reload.</td></tr>
+<tr><td>2</td><td>Stock check</td><td>GET /api/products/{id}/stock</td><td>When the quantity on a product card changes, the current stock is fetched and shown; if the quantity is more than the stock it is lowered to the available amount with an &ldquo;Only n left&rdquo; note.</td></tr>
+<tr><td>3</td><td>Cart quantity update</td><td>POST /api/cart/{itemId}/qty</td><td>The &minus;/+ buttons save the new quantity and update the line subtotal, cart total and badge.</td></tr>
+<tr><td>4</td><td>Live search</td><td>GET /api/products/search?q=</td><td>Suggestion list under the shop search box while typing (from 2 characters).</td></tr>
+<tr><td>5</td><td>Wishlist toggle</td><td>POST /api/wishlist/{productId}</td><td>Heart icon turns red/grey; uses the many-to-many table.</td></tr>
+<tr><td>6</td><td>Email availability</td><td>GET /api/customers/email-available</td><td>&ldquo;Email already registered&rdquo; appears under the field as soon as it loses focus.</td></tr>
+</table>
+<pre>// app.js - add to cart without reloading the page
+$('.btn-add-cart').on('click', function () {
+    var $btn = $(this), $card = $btn.closest('.product');
+    var qty = parseInt($card.find('.qty-input').val(), 10) || 1;
+    $btn.prop('disabled', true);
+    $.post(ctx + '/api/cart/add', { productId: $btn.data('id'), qty: qty })
+        .done(function (res) {
+            $('#cartCount').text(res.cartCount);
+            toast(res.message);
+        })
+        .fail(function (xhr) { toast(errorText(xhr), true); })
+        .always(function () { $btn.prop('disabled', false); });
+});</pre>
+</section>
+
+<section>
+<h1>17. Server-Side Validation and Error Handling</h1>
+<p>Client-side checks can be bypassed, so all data is validated again on the server:</p>
+<ul>
+<li><b>Bean Validation</b> on entities, e.g. <code>@NotBlank</code>, <code>@Email</code>, <code>@Pattern(regexp="[6-9]\\d{9}")</code> for phone, <code>@Pattern(regexp="\\d{6}")</code> for pincode, <code>@DecimalMin("1.00")</code> for price, <code>@Pattern</code> for the SKU. Controllers use <code>@Valid</code> with <code>BindingResult</code>; on errors the same form is shown again with messages next to each field (<code>&lt;form:errors&gt;</code>).</li>
+<li><b>Uniqueness checks</b> (email, SKU, category name) are done in the services and reported as field errors with <code>bindingResult.rejectValue</code>.</li>
+<li><b>Business rule violations</b> throw <code>BusinessException</code>; controllers catch it and show the message as a red flash message on the page.</li>
+<li><b>GlobalExceptionHandler</b> (<code>@ControllerAdvice</code>) turns remaining errors into the friendly <code>error.jsp</code> page with the right status: <code>NotFoundException</code> &rarr; 404 &ldquo;Record not found&rdquo;; unknown URL &rarr; 404; wrong parameter type (e.g. <code>/orders/abc</code>) &rarr; 400; uncaught business rule &rarr; 422; anything else &rarr; 500 (logged, no stack trace shown to the user).</li>
+<li><b>ApiController</b> has its own handlers so AJAX calls always get JSON (<code>{"ok":false,"message":...}</code>) with status 400 or 404 instead of an HTML page.</li>
+</ul>
+<p>Screenshot 19 (section 23) shows the server rejecting a customer form whose browser checks were switched off, and screenshot 15 shows the 404 page.</p>
+</section>
+
+<section class="newpage">
+<h1>18. End-to-End Workflows</h1>
+<h3>Workflow 1 &ndash; Cart to order with stock update (and cancellation)</h3>
+<ol>
+<li>Select a customer in &ldquo;Shopping as&rdquo;, open <b>Shop</b>, click <i>Add to cart</i> (AJAX, BR1/BR2 checked).</li>
+<li>Open <b>Cart</b>, change quantities with &minus;/+ (AJAX), continue to <b>Checkout</b>.</li>
+<li>Enter/confirm the address and choose a payment mode (client-side validation), click <i>Place order</i>.</li>
+<li>Transaction T1 runs. Success: redirect to the order page with &ldquo;Order ORD-261114-019 placed successfully&rdquo;. Failure: back to the cart with &ldquo;Order not placed: Not enough stock for ...&rdquo; and nothing changed.</li>
+<li>Staff open <b>Orders</b> and click <i>Mark shipped</i> / <i>Mark delivered</i> (BR4). While still PLACED the order can be cancelled (T2, BR3) and stock returns.</li>
+</ol>
+<p>Verified in the running application: ordering 2 &times; Wireless Mouse, 1 &times; Head First Java and 1 &times; Cotton Kurta reduced stock 45&rarr;43, 15&rarr;14 and 35&rarr;34, wrote three SALE rows in stock_movement and emptied the cart. Trying to cancel the order after it was shipped was refused.</p>
+<h3>Workflow 2 &ndash; Return / refund request</h3>
+<ol>
+<li>On a <b>delivered</b> order the order page shows a <i>Return</i> button on each line (only within 7 days).</li>
+<li>The <b>return form</b> shows how many units can still be returned and a live refund estimate; enter quantity and reason and submit (BR5 checked again on the server).</li>
+<li>The request appears in <b>Returns</b> as REQUESTED; staff click <i>Approve</i> (T3: refund = qty &times; unit price, stock added back, RETURN movement) or <i>Reject</i>.</li>
+</ol>
+<p>Verified: return #4 for 1 Wireless Mouse was approved with a refund of &#8377;599.00, stock went 43&rarr;44 and a RETURN movement &ldquo;RET-4&rdquo; was logged.</p>
+</section>
+
+<section>
+<h1>19. Search, Navigation and Pagination</h1>
+<ul>
+<li>The <b>navigation menu</b> in the common header links every module: Dashboard, Shop, Products, Categories, Sellers, Customers, Orders, Returns and a Reports drop-down. The active module is highlighted.</li>
+<li><b>Search and filters</b>: products (name/SKU + category), shop (name + category + sort order), customers (name/email + city), orders (order no./customer + status), sellers (name/city), returns (status).</li>
+<li><b>Pagination and sorting</b> on four listings &ndash; products, customers, orders and shop &ndash; with 8 rows per page. Column headers are links (<code>sortlink.tag</code>); clicking again reverses the direction (&#9650;/&#9660;). The pager (<code>pager.tag</code>) keeps the current search, filter and sort in its links.</li>
+<li>Sort fields are checked against a whitelist in <code>PageUtil</code>, so an unknown field in the URL falls back to the default instead of causing an error.</li>
+</ul>
+</section>
+
+<section>
+<h1>20. Reports and Dashboard</h1>
+<table>
+<tr><th style="width:24%">Page</th><th>Content</th><th style="width:28%">Query</th></tr>
+<tr><td>Dashboard (/)</td><td>Total revenue, number of orders, orders to ship, active products, customers, low-stock items, pending returns; 5 most recent orders; 8 most recent stock movements.</td><td>totalRevenue, countByStatus, countLowStock, findTop5..., findTop8...</td></tr>
+<tr><td>Monthly sales</td><td>Orders, revenue and average order value per month with a bar for each month and a grand total; cancelled orders excluded.</td><td>OrderRepository.monthlySales</td></tr>
+<tr><td>Top selling products</td><td>Top 10 products by quantity sold with revenue.</td><td>OrderItemRepository.findTopSelling</td></tr>
+<tr><td>Low stock / reorder</td><td>Active products at or below their reorder level with the seller's phone and a suggested order quantity.</td><td>ProductRepository.findLowStock</td></tr>
+</table>
+</section>
+
+<section class="newpage">
+<h1>21. Testing Summary and Test Cases</h1>
+<p>Automated tests are run with <code>mvn test</code>. Service tests use JUnit 5 + Mockito (no database), query tests use <code>@DataJpaTest</code> on H2, and endpoint tests use <code>@SpringBootTest</code> with MockMvc. <b>Result: 30 tests, 0 failures, 0 errors &ndash; BUILD SUCCESS.</b></p>
+<table>
+<tr><th style="width:26%">Test class</th><th style="width:8%">Tests</th><th>What is tested</th></tr>
+<tr><td>CartServiceTest</td><td class="c">5</td><td>BR1/BR2: add within stock, more than stock, existing line goes over stock, quantity above 10, inactive product</td></tr>
+<tr><td>OrderServiceTest</td><td class="c">6</td><td>T1 reduces stock and totals, not enough stock saves nothing, empty cart, T2 cancel restores stock, cannot cancel shipped (BR3), status order (BR4)</td></tr>
+<tr><td>ReturnServiceTest</td><td class="c">5</td><td>BR5: within 7 days ok, after 7 days rejected, before delivery rejected, returnable quantity, T3 refund + restock</td></tr>
+<tr><td>CustomQueryTest</td><td class="c">6</td><td>findLowStock/countLowStock, product search + paging, monthlySales, findTopSelling, order search, sumActiveReturnQty</td></tr>
+<tr><td>EndpointTest</td><td class="c">8</td><td>Stock JSON, add-to-cart JSON, 400 over stock, 400 no customer, 404 error page, invalid customer form, checkout success, checkout rollback</td></tr>
+<tr><th>Total</th><th class="c">30</th><th class="pass">All passed</th></tr>
+</table>
+<h3>Business-rule unit test (example)</h3>
+<pre>@Test
+void cancel_shippedOrder_isNotAllowed() {
+    Order o = orderWith(OrderStatus.SHIPPED, 2);
+    when(orderRepo.findById(1)).thenReturn(Optional.of(o));
+
+    assertThatThrownBy(() -&gt; orderService.cancelOrder(1))
+            .isInstanceOf(BusinessException.class)
+            .hasMessageContaining("can no longer be cancelled");
+    assertThat(kurta.getStockQty()).isEqualTo(5);      // stock untouched
+}</pre>
+<h3>Query test (example)</h3>
+<pre>@Test
+void monthlySales_groupsByMonthAndSkipsCancelled() {
+    List&lt;MonthlySales&gt; rows = orderRepo.monthlySales();
+    assertThat(rows).hasSize(2);
+    MonthlySales oct = rows.get(0);                                   // newest first
+    assertThat(oct.month()).isEqualTo(10);
+    assertThat(oct.orderCount()).isEqualTo(2);                        // cancelled ORD-4 not counted
+    assertThat(oct.revenue()).isEqualByComparingTo("3697.00");        // 2499 + 2*599
+}</pre>
+<h3>Endpoint tests &ndash; requests and responses</h3>
+<p>MockMvc endpoint test (rollback of the order transaction):</p>
+<pre>POST /checkout   paymentMode=COD, shippingAddress=8 FC Road, Pune 411004
+  cart: 2 x Wireless Mouse (stock 45), 3 x Laptop Stand (stock changed to 1 meanwhile)
+Response: 302 redirect to /cart
+  flash error = "Order not placed: Not enough stock for Laptop Stand: requested 3, available 1"
+Checks: mouse stock still 45, 0 orders, 0 stock movements, cart still has 5 units   -&gt; PASS</pre>
+<p>Requests sent to the running application (curl) and the responses received:</p>
+<pre>$ curl http://localhost:8080/api/products/6/stock
+{"productId":6,"name":"Laptop Stand","stock":3,"active":true,"lowStock":true}          HTTP 200
+
+$ curl "http://localhost:8080/api/products/search?q=jav"
+[{"id":12,"name":"Head First Java","sku":"BK-3002","price":799.00,"stock":14}]          HTTP 200
+
+$ curl "http://localhost:8080/api/customers/email-available?email=priya.nair@mail.com"
+{"available":false}                                                                       HTTP 200
+
+$ curl -X POST -d "productId=1&amp;qty=2" http://localhost:8080/api/cart/add      (no customer selected)
+{"ok":false,"message":"Choose a customer from 'Shopping as' first"}                      HTTP 400
+
+$ curl http://localhost:8080/orders/999
+error.jsp - "Order with id 999 was not found"                                             HTTP 404</pre>
+</section>
+
+<section class="newpage">
+<h3 style="font-size:13pt">Functional test cases (manual, run on the application with MySQL)</h3>
+<table style="font-size:9.3pt">
+<tr><th style="width:6%">ID</th><th style="width:19%">Description</th><th style="width:22%">Input</th><th style="width:22%">Expected result</th><th style="width:23%">Actual result</th><th style="width:8%">Status</th></tr>
+<tr><td>TC01</td><td>Add product to cart (AJAX)</td><td>Shopping as Aarav, Bluetooth Earbuds, qty 1, click Add to cart</td><td>Cart badge increases without reload, toast shown</td><td>Badge 2&rarr;3, &ldquo;added to cart&rdquo; toast</td><td class="pass">Pass</td></tr>
+<tr><td>TC02</td><td>Add more than stock</td><td>Laptop Stand (stock 3), qty 4</td><td>Error message, cart unchanged</td><td>&ldquo;Only 3 unit(s) of Laptop Stand in stock&rdquo;</td><td class="pass">Pass</td></tr>
+<tr><td>TC03</td><td>Change quantity in cart</td><td>Click + on Wireless Mouse (qty 1)</td><td>Qty 2, subtotal and total updated live</td><td>Subtotal 1,198.00, total 2,896.00</td><td class="pass">Pass</td></tr>
+<tr><td>TC04</td><td>Checkout without payment mode</td><td>Payment mode &ldquo;-- choose --&rdquo;, click Place order</td><td>Form not submitted, field message</td><td>&ldquo;Payment mode is required&rdquo;</td><td class="pass">Pass</td></tr>
+<tr><td>TC05</td><td>Place order</td><td>3 cart lines, UPI, default address</td><td>Order created, stock reduced, cart emptied</td><td>ORD-261114-019; stock 45&rarr;43, 15&rarr;14, 35&rarr;34; cart 0</td><td class="pass">Pass</td></tr>
+<tr><td>TC06</td><td>Cancel shipped order</td><td>POST /orders/19/cancel after Mark shipped</td><td>Refused with message, status unchanged</td><td>&ldquo;... is SHIPPED and can no longer be cancelled&rdquo;</td><td class="pass">Pass</td></tr>
+<tr><td>TC07</td><td>Order status flow</td><td>Mark shipped, then Mark delivered</td><td>PLACED&rarr;SHIPPED&rarr;DELIVERED, delivered date set</td><td>DELIVERED, delivered on 14 Nov 2026</td><td class="pass">Pass</td></tr>
+<tr><td>TC08</td><td>Return request and approval</td><td>Return 1 Wireless Mouse, reason given; Approve</td><td>Refund = 1 &times; 599, stock +1, RETURN movement</td><td>Refund &#8377;599.00, stock 43&rarr;44, RET-4 logged</td><td class="pass">Pass</td></tr>
+<tr><td>TC09</td><td>Customer form &ndash; invalid data (server)</td><td>Empty first name, duplicate email, phone 12345, pincode 39500</td><td>Form shown again with 4 field errors, nothing saved</td><td>4 messages shown, no new row</td><td class="pass">Pass</td></tr>
+<tr><td>TC10</td><td>Delete category with products</td><td>Delete &ldquo;Electronics&rdquo;</td><td>Not deleted, explanation shown</td><td>&ldquo;Category 'Electronics' still has 6 product(s)...&rdquo;</td><td class="pass">Pass</td></tr>
+<tr><td>TC11</td><td>Delete product with sales history</td><td>Delete Wireless Mouse</td><td>Product deactivated instead of deleted</td><td>&ldquo;... marked inactive instead of deleted&rdquo;</td><td class="pass">Pass</td></tr>
+<tr><td>TC12</td><td>Category CRUD</td><td>Add &ldquo;Test Toys&rdquo;, rename, add duplicate, delete</td><td>Added, updated, duplicate rejected, deleted</td><td>All four messages as expected</td><td class="pass">Pass</td></tr>
+<tr><td>TC13</td><td>Missing record</td><td>GET /products/9999/edit</td><td>Friendly 404 page</td><td>HTTP 404, &ldquo;Product with id 9999 was not found&rdquo;</td><td class="pass">Pass</td></tr>
+<tr><td>TC14</td><td>Sorting and paging</td><td>Orders, click Amount header, page 2</td><td>Sorted by amount desc, 8 rows per page</td><td>Highest first (5,897.00), pages 1&ndash;3</td><td class="pass">Pass</td></tr>
+</table>
+<h3>Problems found during testing and fixed</h3>
+<ul>
+<li>The error page returned HTTP 500 instead of 404 because <code>error.jsp</code> had <code>isErrorPage="true"</code>, which makes Jasper force status 500 when an exception attribute is present. The directive was removed. (MockMvc does not render JSPs, so this was only visible in the real server.)</li>
+<li>Order times were shown 5&frac12; hours behind the stock movement times because the JVM was running in UTC while MySQL used IST. The default time zone is now set to Asia/Kolkata at start-up.</li>
+<li>The checkbox on the checkout page was stretched to full width by the general input style; a specific CSS rule was added.</li>
+</ul>
+</section>
+
+<section class="newpage">
+<h1>22. Version Control History</h1>
+<p>The project was kept in a Git repository from the start and committed layer by layer (schema &rarr; setup &rarr; model &rarr; repositories &rarr; services &rarr; controllers &rarr; views &rarr; tests &rarr; fixes). The repository is hosted on GitHub:</p>
+<table>
+<tr><th style="width:28%">Repository</th><td><a href="https://github.com/DharmikTrivedi/ecommerce-order-inventory">https://github.com/DharmikTrivedi/ecommerce-order-inventory</a></td></tr>
+<tr><th>Commit history</th><td><a href="https://github.com/DharmikTrivedi/ecommerce-order-inventory/commits/main/">https://github.com/DharmikTrivedi/ecommerce-order-inventory/commits/main/</a></td></tr>
+<tr><th>Branch / commits</th><td><code>main</code>, 13 commits</td></tr>
+</table>
+<figure><div style="overflow:hidden;border:1px solid #999;aspect-ratio:1280/1115"><img src="screenshots/20-github-commits.png" style="display:block;width:100%;max-width:none;border:0;margin-top:-6.25%"></div>
+<div class="caption">Screenshot &ndash; commit history of the main branch on GitHub</div></figure>
+</section>
+
+<section class="newpage">
+<h1>23. Application Screenshots</h1>
+<p>All screenshots were taken from the application running locally against the MySQL database <code>ecom_oims</code>.</p>
+<figure><img src="screenshots/01-dashboard.png"><div class="caption">Screenshot 1 &ndash; Dashboard with key counts, recent orders and stock activity</div></figure>
+<figure><img src="screenshots/16-shop.png"><div class="caption">Screenshot 2 &ndash; Shop page (product cards, search, sort, add to cart, wishlist)</div></figure>
+<figure><img class="half" src="screenshots/17-cart.jpg"><div class="caption">Screenshot 3 &ndash; Cart with AJAX quantity buttons and live totals</div></figure>
+<figure><img class="half" src="screenshots/18-checkout-validation.jpg"><div class="caption">Screenshot 4 &ndash; Checkout with client-side validation message</div></figure>
+<figure><img src="screenshots/09-order-view.png"><div class="caption">Screenshot 5 &ndash; Order details after delivery, with Return buttons</div></figure>
+<figure><img src="screenshots/11-return-form.png"><div class="caption">Screenshot 6 &ndash; Return / refund request form with refund estimate</div></figure>
+<figure><img src="screenshots/10-returns.png"><div class="caption">Screenshot 7 &ndash; Return requests (approved request #4 and a pending one)</div></figure>
+<figure><img src="screenshots/02-products-list.png"><div class="caption">Screenshot 8 &ndash; Product list sorted by price (descending), page 2</div></figure>
+<figure><img src="screenshots/03-product-form.png"><div class="caption">Screenshot 9 &ndash; Edit product form</div></figure>
+<figure><img src="screenshots/04-categories.png"><div class="caption">Screenshot 10 &ndash; Categories with product count</div></figure>
+<figure><img src="screenshots/05-sellers.png"><div class="caption">Screenshot 11 &ndash; Sellers</div></figure>
+<figure><img src="screenshots/06-customers.png"><div class="caption">Screenshot 12 &ndash; Customers filtered by city (Pune), sorted by first name</div></figure>
+<figure><img src="screenshots/07-customer-view.png"><div class="caption">Screenshot 13 &ndash; Customer details with order history</div></figure>
+<figure><img src="screenshots/08-orders-list.png"><div class="caption">Screenshot 14 &ndash; Orders sorted by amount with pagination</div></figure>
+<figure><img src="screenshots/12-report-sales.png"><div class="caption">Screenshot 15 &ndash; Monthly sales report</div></figure>
+<figure><img src="screenshots/13-report-top.png"><div class="caption">Screenshot 16 &ndash; Top selling products report</div></figure>
+<figure><img src="screenshots/14-report-lowstock.png"><div class="caption">Screenshot 17 &ndash; Low stock / reorder report</div></figure>
+<figure><img class="half" src="screenshots/19-server-validation.jpg"><div class="caption">Screenshot 18 &ndash; Server-side validation errors on the customer form</div></figure>
+<figure><img src="screenshots/15-error-404.png"><div class="caption">Screenshot 19 &ndash; Friendly error page for a missing record (HTTP 404)</div></figure>
+</section>
+
+<section class="newpage">
+<h1>24. User Guide</h1>
+<h3>Installation</h3>
+<ol>
+<li>Get the code: <code>git clone https://github.com/DharmikTrivedi/ecommerce-order-inventory.git</code></li>
+<li>Install JDK 17, Maven 3.9 and MySQL 8.0, and start the MySQL service.</li>
+<li>In MySQL Workbench (or the mysql client) run as root: <code>database/create_user.sql</code>.</li>
+<li>Load the tables and sample data as the app user:<br><code>mysql -u oims_app -p &lt; database/schema.sql</code><br><code>mysql -u oims_app -p ecom_oims &lt; database/sample_data.sql</code></li>
+<li>From the project folder run <code>mvn spring-boot:run</code> (or <code>run.ps1</code> on Windows) and open <b>http://localhost:8080</b>.</li>
+<li>To run the tests: <code>mvn test</code> (uses H2, does not touch MySQL).</li>
+</ol>
+<h3>Using the application</h3>
+<ul>
+<li><b>Store staff</b>: use the menu to manage <i>Products</i>, <i>Categories</i>, <i>Sellers</i> and <i>Customers</i> (Add / Edit / Delete buttons on each list). Use the search boxes and filters, click column headers to sort.</li>
+<li><b>Shopping</b>: choose a customer in <i>Shopping as</i> at the top right. Open <i>Shop</i>, set a quantity and click <i>Add to cart</i>. Open <i>Cart</i> to change quantities, then <i>Proceed to checkout</i>, choose the payment mode and click <i>Place order</i>.</li>
+<li><b>Order processing</b>: open <i>Orders</i>, click an order number, then <i>Mark shipped</i> and later <i>Mark delivered</i>. <i>Cancel order</i> is available until the order is shipped.</li>
+<li><b>Returns</b>: on a delivered order click <i>Return</i> next to a product (within 7 days), enter quantity and reason. Staff approve or reject it on the <i>Returns</i> page; approval refunds and restocks automatically.</li>
+<li><b>Order history</b>: a customer's orders are listed on their details page (<i>Customers &rarr; name</i>) and under <i>/my-orders</i> for the selected shopper.</li>
+<li><b>Reports</b>: open the <i>Reports</i> menu for monthly sales, top products and low stock; use <i>Print</i> to print a report.</li>
+</ul>
+</section>
+
+<section>
+<h1>25. Conclusion</h1>
+<p>ShopKart OIMS meets all the requirements of Part A for project 4 and the minimum numbers of Part G: 9 entity classes on 10 tables with 10 relationships (one many-to-many), 18 custom queries, 7 business rules, 3 transactions, full CRUD for 4 entities, 21 pages with a common layout, 6 validated forms, 6 interactive features, 6 AJAX features, 2 end-to-end workflows, 4 paginated and sortable listings, 3 reports with a dashboard, and 30 automated tests plus 14 manual test cases.</p>
+<p>The most useful lessons were about transactions and the gap between tests and the real server. Putting the whole order placement in one <code>@Transactional</code> service method, with a row lock on each product, made the stock logic simple to reason about, and the rollback test proved that a failure leaves no partial order behind. Running the application against MySQL also found problems that the automated tests could not see (an HTTP status forced by a JSP directive and a time-zone mismatch), which showed why manual testing in the real environment is still needed.</p>
+</section>
+
+<section>
+<h1>26. Future Enhancements</h1>
+<ul>
+<li>Login with Spring Security and separate roles for customers, sellers and staff, replacing the &ldquo;Shopping as&rdquo; selector.</li>
+<li>Online payment gateway integration and invoice PDF generation.</li>
+<li>Seller portal so sellers can update their own stock; automatic purchase orders from the low-stock report.</li>
+<li>Product images, ratings and reviews.</li>
+<li>Email/SMS notifications when an order is shipped or a refund is approved.</li>
+<li>Deployment as a WAR on an external Tomcat or in a Docker container with a managed MySQL instance.</li>
+</ul>
+</section>
+
+<section>
+<h1>27. References</h1>
+<ol>
+<li>Spring Boot Reference Documentation, version 3.3 &ndash; https://docs.spring.io/spring-boot/</li>
+<li>Spring Data JPA Reference Documentation &ndash; https://docs.spring.io/spring-data/jpa/reference/</li>
+<li>Spring Framework Documentation: Web MVC, Transaction Management &ndash; https://docs.spring.io/spring-framework/reference/</li>
+<li>Hibernate ORM 6 User Guide &ndash; https://hibernate.org/orm/documentation/</li>
+<li>Jakarta Bean Validation 3.0 Specification &ndash; https://jakarta.ee/specifications/bean-validation/</li>
+<li>Jakarta Standard Tag Library (JSTL) 3.0 &ndash; https://jakarta.ee/specifications/tags/</li>
+<li>MySQL 8.0 Reference Manual &ndash; https://dev.mysql.com/doc/refman/8.0/en/</li>
+<li>jQuery API Documentation &ndash; https://api.jquery.com/</li>
+<li>JUnit 5 User Guide &ndash; https://junit.org/junit5/docs/current/user-guide/ ; Mockito documentation &ndash; https://site.mockito.org/</li>
+<li>Course material: Building Database Applications &ndash; modules on Project Setup, Model, View and Controller layers, Testing, Debugging and Deployment.</li>
+</ol>
+</section>
+
+</body>
+</html>

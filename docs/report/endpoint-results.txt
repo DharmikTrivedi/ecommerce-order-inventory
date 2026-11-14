@@ -1,0 +1,18 @@
+$ curl http://localhost:8080/api/products/6/stock
+{"productId":6,"name":"Laptop Stand","stock":3,"active":true,"lowStock":true}
+HTTP 200
+
+$ curl "http://localhost:8080/api/products/search?q=jav"
+[{"id":12,"name":"Head First Java","sku":"BK-3002","price":799.00,"stock":14}]
+HTTP 200
+
+$ curl "http://localhost:8080/api/customers/email-available?email=priya.nair@mail.com"
+{"available":false}
+HTTP 200
+
+$ curl -X POST -d "productId=1&qty=2" http://localhost:8080/api/cart/add   (no customer selected)
+{"ok":false,"message":"Choose a customer from 'Shopping as' first"}
+HTTP 400
+
+$ curl -i http://localhost:8080/orders/999
+HTTP 404 (error.jsp: "Order with id 999 was not found")
